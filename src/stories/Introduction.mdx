@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Введение" />
+
+# Дизайн-система @moysklad/uikit
+
+Витрина компонентов библиотеки **@moysklad/uikit** `v28.1.0`.
+Здесь можно «потрогать» компоненты живьём, посмотреть их варианты, токены
+и готовые сборки экранов.
+
+## Как устроена навигация
+
+- **Токены** — фундамент системы: цвета, типографика, иконки.
+- **Компоненты** — все ~75 компонентов, сгруппированы по назначению.
+- **Демо-сборки** — примеры реальных экранов, собранных из компонентов.
+
+## Подключение в своём проекте
+
+```tsx
+import '@moysklad/uikit/colorVariables.css'; // токены — один раз в точке входа
+
+import { Button, ButtonVariants, ButtonSize } from '@moysklad/uikit';
+import { Check20Icon } from '@moysklad/uikit/icon';
+```
+
+## Категории компонентов
+
+| Категория | Компоненты |
+| --- | --- |
+| Кнопки и действия | Button, SegmentButton, Toggle, Switch, Chip |
+| Формы и ввод | Input, Textfield, SearchInput, Checkbox, Radiobutton, Select, Datepicker, Quantity, FileUploader |
+| Поля Label-Value | FieldRow, LabelValue, LabelValueInput, LabelValueSelect, LabelValueTextfield, LabelValueDate |
+| Навигация | Tabs, VerticalTab, Breadcrumbs, Pagination, SideMenu, Header, Link |
+| Оверлеи | Modal, Sidepage, BottomSheet, Dropdown, Tooltip, Hint, Help, Snackbar |
+| Статусы и фидбек | Badge, Dot, Counter, Indicator, Banner, EmptyState, Progressbar, Spinner, Skeleton |
+| Контейнеры | HStack, VStack, Listing, Carousel, ImagePreview |
+
+Отдельный модуль **DataGrid** (`@moysklad/uikit/data-grid`) — таблицы с фильтрами,
+настройкой колонок и пагинацией.

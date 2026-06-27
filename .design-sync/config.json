@@ -1,0 +1,28 @@
+{
+  "projectId": "60c8aa90-acf4-42c8-a017-03288eda7056",
+  "shape": "storybook",
+  "pkg": "@moysklad/uikit",
+  "storybookConfigDir": ".storybook",
+  "storybookStatic": ".design-sync/sb-reference",
+  "buildCmd": "",
+  "extraEntries": [
+    "../../../.design-sync/extra-exports.ts"
+  ],
+  "tokensPkg": "@moysklad/uikit",
+  "tokensGlob": "dist/colorVariables.css",
+  "readmeHeader": ".design-sync/conventions.md",
+  "overrides": {
+    "EmptyStateLarge": {
+      "cardMode": "column"
+    }
+  },
+  "titleMap": {
+    "Цвета": null,
+    "Типографика": null,
+    "Иконки": null,
+    "DataGrid(таблица)": null,
+    "Карточкатовара": null,
+    "Списоктоваров": null
+  },
+  "previousProjectId": "b8937eea-acb1-4ab3-aa64-9e7e589c2d9d"
+}

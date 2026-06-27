@@ -1,0 +1,19 @@
+# Зависимости
+node_modules/
+
+# Локальная сборка Storybook (генерируется в CI на GitHub Actions)
+storybook-static/
+
+# Артефакт выгрузки в Claude Design (генерируется конвертером)
+ds-bundle/
+
+# Инструментарий скилла design-sync (внешний toolchain, не часть витрины)
+.ds-sync/
+
+# Кэш грейдинга design-sync
+.design-sync/.cache/
+.design-sync/sb-reference/
+
+# Прочее
+*.log
+.DS_Store
