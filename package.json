@@ -9,7 +9,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@moysklad/uikit": "^28.1.0",
+    "@moysklad/uikit": "^31.20.0",
     "@tanstack/react-table": "8.21.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
