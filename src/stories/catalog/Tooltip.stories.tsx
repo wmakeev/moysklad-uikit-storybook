@@ -19,6 +19,14 @@ export const Overview: Story = {
       <Tooltip placement={Placement.RIGHT} offset={[0, 0]} overlay="Подсказка справа">
         <Button variant="secondary">Наведи (right)</Button>
       </Tooltip>
+      <Tooltip
+        placement={Placement.BOTTOM}
+        offset={[0, 0]}
+        colorToken="dark"
+        overlay="Тёмная подсказка снизу"
+      >
+        <Button variant="secondary">Наведи (dark)</Button>
+      </Tooltip>
     </Row>
   ),
 };

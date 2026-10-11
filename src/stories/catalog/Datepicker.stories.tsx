@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { Datepicker, ELanguages } from '@moysklad/uikit';
+import { Col } from '../../shared/Showcase';
 
 const meta: Meta = {
   title: 'Компоненты/Forms/Datepicker',
@@ -15,8 +16,9 @@ export const Overview: Story = {
   name: 'Обзор',
   render: () => {
     const [date, setDate] = useState<Date | null>(null);
+    const [dateTime, setDateTime] = useState<Date | null>(null);
     return (
-      <div style={box}>
+      <Col gap={24} style={box}>
         <Datepicker
           label="Дата"
           lang={ELanguages.RU}
@@ -28,7 +30,18 @@ export const Overview: Story = {
           placeholder="дд.мм.гггг"
           showIcon
         />
-      </div>
+        <Datepicker
+          label="Дата и время, пустое при незаполненном времени"
+          lang={ELanguages.RU}
+          localeFormat={ELanguages.RU}
+          selectedDate={dateTime}
+          onDateChanged={(d) => setDateTime(d)}
+          placeholder="дд.мм.гггг чч:мм"
+          showTime
+          nullableValueWhenTimeIncomplete
+          showIcon
+        />
+      </Col>
     );
   },
 };

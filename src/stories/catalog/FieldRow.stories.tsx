@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Input } from '@moysklad/uikit';
 import { FieldRow } from '@moysklad/uikit/components/FieldRow';
-import { Label } from '@moysklad/uikit/components/Label';
+import { FieldLabel } from '@moysklad/uikit/components/FieldLabel';
 import { Col } from '../../shared/Showcase';
 
 const meta: Meta = {
@@ -18,11 +18,11 @@ export const Overview: Story = {
   render: () => (
     <Col gap={12} style={box}>
       <FieldRow>
-        <Label label="Наименование" required />
+        <FieldLabel label="Наименование" required />
         <Input name="fr-name" placeholder="Введите значение" />
       </FieldRow>
       <FieldRow>
-        <Label label="Артикул" />
+        <FieldLabel label="Артикул" />
         <Input name="fr-sku" placeholder="—" />
       </FieldRow>
     </Col>

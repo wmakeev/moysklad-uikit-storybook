@@ -52,7 +52,7 @@ const TEXT = [
   '--text-attention',
 ];
 
-const BG = ['--bgd-white', '--bgd-grey', '--bgd-secondary', '--bgd-overlay'];
+const BG = ['--bgd-white', '--bgd-grey', '--bgd-secondary', '--bgd-overlay', '--bgd-accent'];
 
 const BUTTONS = [
   '--button-primary-normal',
@@ -71,6 +71,7 @@ const BORDERS = [
   '--border-disable',
   '--border-accent',
   '--border-critical',
+  '--border-focused',
 ];
 
 const ELEMENTS = [
@@ -80,7 +81,6 @@ const ELEMENTS = [
   '--elements-positive',
   '--elements-critical',
   '--elements-attention',
-  '--elements-disabled',
 ];
 
 const BADGES = [
@@ -102,6 +102,33 @@ const PALETTE = [
   '--light-grey-100',
   '--light-grey-400',
   '--dark-grey-dark-900',
+  '--light-blue-50',
+];
+
+const GWT_STATUS = [
+  '--gwt-statuses-grey',
+  '--gwt-statuses-red',
+  '--gwt-statuses-orange',
+  '--gwt-statuses-brown',
+  '--gwt-statuses-yellow-green',
+  '--gwt-statuses-lime-green',
+  '--gwt-statuses-mint-green',
+  '--gwt-statuses-green',
+  '--gwt-statuses-sky-blue',
+  '--gwt-statuses-blue',
+  '--gwt-statuses-dusty-blue',
+  '--gwt-statuses-dark-blue',
+  '--gwt-statuses-pink',
+  '--gwt-statuses-violet',
+  '--gwt-statuses-dark-red',
+  '--gwt-statuses-black',
+];
+
+const VIEWERS_STACK = [
+  '--viewers-stack-green',
+  '--viewers-stack-yellow',
+  '--viewers-stack-pink',
+  '--viewers-stack-violet',
 ];
 
 const meta: Meta = {
@@ -121,6 +148,8 @@ export const Семантические: Story = {
       <Group title="Границы" tokens={BORDERS} />
       <Group title="Элементы" tokens={ELEMENTS} />
       <Group title="Бейджи (фон)" tokens={BADGES} />
+      <Group title="Цвета статусов (gwt-status)" tokens={GWT_STATUS} />
+      <Group title="Аватары наблюдателей (viewers-stack)" tokens={VIEWERS_STACK} />
     </div>
   ),
 };

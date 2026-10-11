@@ -39,6 +39,27 @@ export const Overview: Story = {
           <Button disabled>Disabled</Button>
         </Row>
       </Section>
+      <Section title={'Кнопка-ссылка (as="a")'}>
+        <Row>
+          <Button as="a" href="#">
+            Перейти
+          </Button>
+          <Button as="a" href="#" variant={ButtonVariants.SECONDARY}>
+            Перейти
+          </Button>
+          <Button as="a" href="#" disabled>
+            Неактивная ссылка
+          </Button>
+        </Row>
+      </Section>
+      <Section title="Без отступов (noPadding, только frameless)">
+        <Row>
+          <Button variant={ButtonVariants.FRAMELESS}>Frameless</Button>
+          <Button variant={ButtonVariants.FRAMELESS} noPadding>
+            Frameless noPadding
+          </Button>
+        </Row>
+      </Section>
       <Section title="С иконкой">
         <Row>
           <Button>

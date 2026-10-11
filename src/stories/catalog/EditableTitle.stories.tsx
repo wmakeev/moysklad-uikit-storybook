@@ -16,6 +16,7 @@ export const Overview: Story = {
       titleComponent="H2"
       onApplyValidValue={() => {}}
       maxLength={80}
+      prefix="№ 00125"
     />
   ),
 };

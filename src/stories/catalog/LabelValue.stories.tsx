@@ -21,3 +21,13 @@ export const Overview: Story = {
     </Col>
   ),
 };
+
+export const LinkVariant: Story = {
+  name: 'Значение-ссылка',
+  render: () => (
+    <Col gap={4} style={box}>
+      <LabelValue label="Сайт" value="moysklad.ru" valueVariant="link" />
+      <LabelValue label="Сайт" value="Обычное значение" valueVariant="default" />
+    </Col>
+  ),
+};

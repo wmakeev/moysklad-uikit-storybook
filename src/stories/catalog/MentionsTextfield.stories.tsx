@@ -34,6 +34,8 @@ export const Overview: Story = {
           trigger="@"
           value={value}
           onChange={setValue}
+          size="l"
+          resizeBottom
         />
       </div>
     );

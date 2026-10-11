@@ -36,6 +36,19 @@ export const Overview: Story = {
             <Chip label="Critical" variant="critical" selected={false} onSelectedChange={() => {}} />
           </Row>
         </Section>
+        <Section title="Цвет подписи (labelColorToken)">
+          <Row>
+            {(['primary', 'secondary', 'accent', 'positive', 'critical'] as const).map((token) => (
+              <Chip
+                key={token}
+                label={token}
+                labelColorToken={token}
+                selected={false}
+                onSelectedChange={() => {}}
+              />
+            ))}
+          </Row>
+        </Section>
         <Section title="Удаляемый">
           <Row>
             <Chip

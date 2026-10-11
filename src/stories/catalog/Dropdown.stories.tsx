@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useRef, useState } from 'react';
+import { Col } from '../../shared/Showcase';
 import { Dropdown, DropdownDivider, Button, ButtonVariants } from '@moysklad/uikit';
 import { Edit16Icon, Delete16Icon, Copy16Icon } from '@moysklad/uikit/icon';
 
@@ -22,8 +23,10 @@ export const Overview: Story = {
       padding: '8px 12px',
       cursor: 'pointer',
     } as const;
+    const limitedRef = useRef<HTMLButtonElement>(null);
+    const [limitedOpen, setLimitedOpen] = useState(false);
     return (
-      <>
+      <Col gap={16} style={{ alignItems: 'flex-start' }}>
         <Button ref={triggerRef} variant={ButtonVariants.SECONDARY} onClick={() => setOpen((o) => !o)}>
           Меню действий
         </Button>
@@ -41,7 +44,29 @@ export const Overview: Story = {
             </div>
           </div>
         </Dropdown>
-      </>
+        <Button
+          ref={limitedRef}
+          variant={ButtonVariants.SECONDARY}
+          onClick={() => setLimitedOpen((o) => !o)}
+        >
+          Список с maxHeight
+        </Button>
+        <Dropdown
+          open={limitedOpen}
+          onClose={() => setLimitedOpen(false)}
+          triggerRef={limitedRef}
+          maxHeight={120}
+          isInnerScroll
+        >
+          <div style={{ minWidth: 200, padding: '4px 0' }}>
+            {['Первый', 'Второй', 'Третий', 'Четвёртый', 'Пятый', 'Шестой', 'Седьмой'].map((name) => (
+              <div key={name} style={item} onClick={() => setLimitedOpen(false)}>
+                {name}
+              </div>
+            ))}
+          </div>
+        </Dropdown>
+      </Col>
     );
   },
 };

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState, type Ref } from 'react';
-import { AutoComplete, Input, Text, type ISelectOption } from '@moysklad/uikit';
+import { AutoComplete, Button, ButtonVariants, Input, Text, type ISelectOption } from '@moysklad/uikit';
 import { Col } from '../../shared/Showcase';
 
 const meta: Meta = {
@@ -50,6 +50,13 @@ export const Overview: Story = {
                 onChange?.();
               }}
             />
+          )}
+          renderDropdownActions={({ closeDropdown }) => (
+            <div style={{ padding: 8 }}>
+              <Button variant={ButtonVariants.SECONDARY} onClick={closeDropdown}>
+                Закрыть список
+              </Button>
+            </div>
           )}
         />
         <Text color="tertiary">Выбрано: {picked || '—'}</Text>

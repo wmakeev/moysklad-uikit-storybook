@@ -32,6 +32,7 @@ export const Overview: Story = {
           unitOptions={UNITS}
           selectedUnitOption={unit}
           onUnitChange={setUnit}
+          helpProps={{ popup: 'Единицу измерения можно выбрать в списке' }}
         />
       </div>
     );

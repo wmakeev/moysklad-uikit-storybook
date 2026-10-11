@@ -17,6 +17,12 @@ export const Overview: Story = {
       <Link href="#" disabled>
         Неактивная ссылка
       </Link>
+      <Link as="button" onClick={() => {}}>
+        Ссылка-кнопка (as="button")
+      </Link>
+      <Link as="button" disabled>
+        Неактивная ссылка-кнопка
+      </Link>
     </Col>
   ),
 };
