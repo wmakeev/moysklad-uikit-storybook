@@ -1,7 +1,7 @@
 # Стек для приложения на `@moysklad/uikit`
 
 Инструкция для инициализации нового приложения поверх дизайн-системы
-`@moysklad/uikit` **v28.x**. Описывает обязательный стек, настройку, подключение
+`@moysklad/uikit` **v31.x**. Описывает обязательный стек, настройку, подключение
 токенов и неочевидные ловушки рантайма (собраны на практике, см. в конце).
 
 > Цель файла — дать агенту-инициализатору всё, чтобы поднять рабочий каркас
@@ -14,7 +14,7 @@
 
 | Слой | Выбор | Версия | Примечание |
 |------|-------|--------|------------|
-| UI-библиотека | `@moysklad/uikit` | `^28.1.0` | peer: React 17/18 |
+| UI-библиотека | `@moysklad/uikit` | `^31.20.0` | peer: React 17/18 |
 | Framework | `react` + `react-dom` | `^18.3.1` | ставить именно 18 |
 | Язык | `typescript` | `^5.6` | `strict: true` |
 | Бандлер | `vite` | `^5.4` | + `@vitejs/plugin-react` `^4.3` |
@@ -55,7 +55,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@moysklad/uikit": "^28.1.0",
+    "@moysklad/uikit": "^31.20.0",
     "@tanstack/react-table": "8.21.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
@@ -123,6 +123,10 @@ import '@moysklad/uikit/colorVariables.css';
 - `ms` — семантика: `--text-*`, `--bgd-*`, `--button-*`, `--border-*`,
   `--elements-*`, `--badge-*`;
 - `status` — `--status-*`.
+- `gwt-status` — `--gwt-statuses-*` (16 цветов статусов, нужны `StatusBadge`; слой с 31.x);
+- `viewers-stack` — `--viewers-stack-*` (для `ViewersStack`; слой с 31.x).
+
+В 31.x добавлены `--light-blue-50`, `--bgd-accent`, `--border-focused`; `--elements-disabled` удалён.
 
 Используйте семантические переменные (`var(--text-primary)`, `var(--bgd-white)` и
 т.п.), а не сырую палитру.
@@ -132,7 +136,7 @@ import '@moysklad/uikit/colorVariables.css';
 | Что | Импорт |
 |-----|--------|
 | Компоненты (большинство) | `import { Button, Text, Modal } from '@moysklad/uikit'` |
-| Иконки (306 шт.) | `import { Check20Icon } from '@moysklad/uikit/icon'` |
+| Иконки (318 шт.) | `import { Check20Icon } from '@moysklad/uikit/icon'` (главный вход их тоже реэкспортирует) |
 | Таблицы | `import { Table, ... } from '@moysklad/uikit/data-grid'` |
 | Токены (CSS) | `import '@moysklad/uikit/colorVariables.css'` |
 
@@ -186,11 +190,13 @@ function Root() {
 Часть реэкспортируется только через подпуть `@moysklad/uikit/components/<Name>`,
 а **не** из `@moysklad/uikit`. Проверка наличия в главном входе —
 `node_modules/@moysklad/uikit/dist/index.d.ts`; все подпути перечислены в
-`package.json → exports`. Известные «только подпуть»:
+`package.json → exports`. Известные «только подпуть» (9 шт. в 31.20.0):
 
 ```tsx
+import { FieldLabel } from '@moysklad/uikit/components/FieldLabel';
 import { FieldRow } from '@moysklad/uikit/components/FieldRow';
-import { Label } from '@moysklad/uikit/components/Label';
+import { Label } from '@moysklad/uikit/components/Label'; // deprecated, см. ниже
+import { Panel } from '@moysklad/uikit/components/Panel';
 import { LabelValue } from '@moysklad/uikit/components/LabelValue';
 import { Info } from '@moysklad/uikit/components/Info';
 import { Indicator } from '@moysklad/uikit/components/Indicator';
@@ -199,7 +205,8 @@ import { InputClear } from '@moysklad/uikit/components/InputClear';
 ```
 
 ### Deprecated → не использовать
-`Switch` → `SegmentButton`; `Header` → `Text`/`Text.H1..`; `Typography` → `Text`.
+`Switch` → `SegmentButton`; `Header` → `Text`/`Text.H1..`; `Typography` → `Text`;
+`Label` → `FieldLabel` (с 31.x компонент `Label` целиком `@deprecated`, пропсы `label`, `required` совместимы).
 Дают рантайм-предупреждения в консоли.
 
 ### Контролируемость по умолчанию
@@ -217,9 +224,11 @@ import { InputClear } from '@moysklad/uikit/components/InputClear';
   `input` (якорь дропдауна floating-ui) — иначе рантайм-краш
   `Cannot read properties of null (reading 'getBoundingClientRect')`. Его
   `onChange` вызывается без аргументов.
-- **Tooltip:** обязательны `placement` и `offset: [number, number]`.
+- **Tooltip:** обязательны `placement` и `offset: [number, number]`. С 31.x есть `colorToken: 'light' | 'dark'`.
+- **Help:** проп `icon` удалён в 31.x; есть `size` (`'s' | 'm' | 'l'`), `disabled`.
 - **Select:** `value` — это опция целиком (`ISelectOption<T>`), не raw-значение;
   `onChange(option)`.
+  Флаг архивного значения в 31.x — `showArchived` (был `isArchived`), текст подсказки — `inputHintText`.
 - **Dropdown:** требует `triggerRef: RefObject<HTMLElement>`, `open`,
   `onClose(reason?)`.
 - **Chip:** использовать **new API** (`label`, `selected`, `onSelectedChange`,
@@ -280,7 +289,7 @@ import { InputClear } from '@moysklad/uikit/components/InputClear';
 
 Минимальный, но «настоящий» каркас: токены, провайдеры на корне, форма
 (`Input` + `Select` + `Button`) с тостом и небольшая таблица `data-grid`.
-Пропсы сверены по `dist/*.d.ts` для uikit v28.
+Пропсы сверены по `dist/*.d.ts` для uikit v31.20.0.
 
 ### `src/main.tsx`
 
@@ -427,7 +436,7 @@ function ProductTableDemo() {
 
   return (
     <section style={{ marginTop: 24 }}>
-      <Text variant="bodyStrong" color={TextColor.SECONDARY}>
+      <Text variant="bodyStrong" color={TextColor.secondary}>
         Товары
       </Text>
       {/* Контейнеру задаём высоту — Table считает высоту через ResizeObserver. */}
@@ -439,7 +448,7 @@ function ProductTableDemo() {
 }
 ```
 
-> ⚠️ Точные имена/значения (`TextColor.SECONDARY`, `ELanguages.RU`,
+> ⚠️ Точные имена/значения (`TextColor.secondary`, `ELanguages.RU`,
 > `ButtonVariants`) и пропсы конкретных компонентов всегда сверяйте по
 > `dist/*.d.ts` — версии API меняются между минорами. Готовые ячейки/заголовки
 > для таблицы (`NameCell`, `LinkCell`, `CheckboxHeader`, …) — в §7 и в

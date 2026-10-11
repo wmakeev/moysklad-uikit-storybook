@@ -7,12 +7,12 @@
 
 **🔗 Живая витрина: <https://wmakeev.github.io/moysklad-uikit-storybook/>**
 
-Покомпонентный каталог (57 компонентов), страницы токенов (цвета, типографика, иконки)
+Покомпонентный каталог (68 компонентов), страницы токенов (цвета, типографика, иконки)
 и демо-сборки экранов.
 
 ## Стек
 
-Storybook 8.6 · Vite 5 · React 18.3 · TypeScript 5.6 · `@moysklad/uikit` v28.1.0
+Storybook 8.6 · Vite 5 · React 18.3 · TypeScript 5.6 · `@moysklad/uikit` v31.20.0
 
 ## Запуск
 

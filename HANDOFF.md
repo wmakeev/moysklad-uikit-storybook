@@ -4,9 +4,16 @@
 
 ---
 
-## ✅ ЭКСПОРТ В CLAUDE DESIGN — ЗАВЕРШЁН (2026-06-25)
+## Текущее состояние (2026-10-12): витрина на 31.20.0, выгрузка устарела
 
-Выгрузка витрины в Claude Design **полностью завершена**. Повторно выгружать ничего не нужно.
+- Витрина переведена на `@moysklad/uikit` **31.20.0** по плану `.agents/plans/001-uikit-31/` (этапы 1–4). Карта прогона, решения и грабли: `.agents/plans/001-uikit-31/run/README.md`. Сводка изменений API 28.1.0 → 31.20.0: `.agents/plans/001-uikit-31/api-changes.md`.
+- В каталоге **68 компонентов** (57 − `Label` + 12 новых). `Label` в 31.20.0 целиком `@deprecated` и убран, как раньше `Switch`; канон — `FieldLabel`.
+- Рантайм-проверка всех историй — `npm run check-stories` (`scripts/check-stories.mjs`, playwright-core + системный Chrome; флаги `--dir`, `--ids`, `--interact <id>:<селектор>`). Код выхода падает только на исключение или экран ошибки; колонку «ошибки консоли» смотреть глазами. `--interact` только кликает.
+- **Этап 5 НЕ сделан:** выгрузка в Claude Design ниже — на 28.1.0 и 57 компонентах, на 31.20.0 не перевыгружалась. Ждёт решений владельца (в какой проект, галочка Published) — `.agents/plans/001-uikit-31/00-context.md`, «Решения, которые ждут владельца»; порядок — `01-plan.md`, «Этап 5». `.design-sync/NOTES.md` ещё описывает прежний список подпутей.
+
+## ЭКСПОРТ В CLAUDE DESIGN (2026-06-25, на 28.1.0 — устарел, см. выше)
+
+Выгрузка витрины в Claude Design на 28.1.0 была завершена.
 Полные технические заметки: **`.design-sync/NOTES.md`** (читать первым).
 
 **Активный проект Claude Design:** `60c8aa90-acf4-42c8-a017-03288eda7056` («moysklad uikit»),
@@ -54,10 +61,10 @@ URL: <https://claude.ai/design/p/60c8aa90-acf4-42c8-a017-03288eda7056>
 
 ## Факты о пакете
 
-- `@moysklad/uikit` **v28.1.0**, peer: react 17/18. Установлен react 18.3.1.
+- `@moysklad/uikit` **v31.20.0** (с 2026-10-12; до этого 28.1.0), peer: react 17/18. Установлен react 18.3.1. CHANGELOG в пакете нет — изменения только сравнением `.d.ts`.
 - Токены: `import '@moysklad/uikit/colorVariables.css'` (подключён один раз в `.storybook/preview.ts`).
-  - CSS `@layer lognex` → подслои `basic` (палитра), `ms` (семантика: `--text-*`, `--bgd-*`, `--button-*`, `--border-*`, `--elements-*`, `--badge-*`), `status` (`--status-*`).
-- **306 иконок**: `import { Check20Icon } from '@moysklad/uikit/icon'`. Размеры 12/16/20px. Пропы: `{ stroke?, width?, height?, className? }`. Имена вида `Name{12|16|20}Icon`.
+  - CSS `@layer lognex` → подслои `basic` (палитра), `ms` (семантика: `--text-*`, `--bgd-*`, `--button-*`, `--border-*`, `--elements-*`, `--badge-*`), `status` (`--status-*`); в 31.x добавлены `gwt-status` (`--gwt-statuses-*`) и `viewers-stack` (`--viewers-stack-*`), удалён `--elements-disabled`.
+- **318 иконок** (в 28.1.0 было 306): `import { Check20Icon } from '@moysklad/uikit/icon'`. Размеры 12/16/20px. Пропы: `{ stroke?, width?, height?, className? }`. Имена вида `Name{12|16|20}Icon`.
 - Типографика: `Text` с `variant` (body, bodyL, bodyStrong, bodyXL, caption, heading1..4) + шорткаты `Text.H1..H4/Body/Caption`. Цвета: `TextColor` (primary, secondary, tertiary, accent, positive, critical, attention, invert).
 
 ## ⚠️ Гочи (важно!)
@@ -66,7 +73,8 @@ URL: <https://claude.ai/design/p/60c8aa90-acf4-42c8-a017-03288eda7056>
 Реэкспортируются из `@moysklad/uikit/components/<Name>`, а НЕ из `@moysklad/uikit`:
 ```tsx
 import { FieldRow } from '@moysklad/uikit/components/FieldRow';
-import { Label } from '@moysklad/uikit/components/Label';
+import { FieldLabel } from '@moysklad/uikit/components/FieldLabel'; // замена Label (@deprecated в 31.x)
+import { Panel } from '@moysklad/uikit/components/Panel';
 import { LabelValue } from '@moysklad/uikit/components/LabelValue';
 import { Info } from '@moysklad/uikit/components/Info';
 import { Indicator } from '@moysklad/uikit/components/Indicator';
@@ -119,7 +127,7 @@ src/shared/Showcase.tsx                          # хелперы Row/Col/Sectio
 src/stories/
   Introduction.mdx
   tokens/    Colors | Typography | Icons (.stories.tsx)   # Icons — динамич. галерея из icon/*
-  catalog/   <Name>.stories.tsx (57 шт.)                  # ПОКОМПОНЕНТНЫЕ истории (title: Компоненты/<Group>/<Name>)
+  catalog/   <Name>.stories.tsx (68 шт.)                  # ПОКОМПОНЕНТНЫЕ истории (title: Компоненты/<Group>/<Name>)
   demos/     ProductCard | ProductList | DataGridTable (.stories.tsx)   # демо-сборки экранов
 ```
 
@@ -132,7 +140,7 @@ src/stories/
 **Покрыто** (~весь публичный API, 75+ компонентов): все из README, кроме перечисленного ниже.
 
 **НЕ покрыто / осознанно пропущено:**
-- Switch (deprecated), InputClear (внутренний), BodyText/BodyL/BodyXL/Caption/H1-H4 (алиасы Text-вариантов — показаны на странице типографики).
+- Switch и Label (deprecated), InputClear (внутренний), BodyText/BodyL/BodyXL/Caption/H1-H4 (алиасы Text-вариантов — показаны на странице типографики).
 - В DataGrid показан базовый сценарий (см. ниже); НЕ показаны: фильтры в шапке (`HeaderBuilder`, `Filters`, `SavedFilters`), `ColumnSettings`, `TablePanel`/`TableActions`, DnD-сортировка строк, итоги (footer totals), inline-редактирование ячеек (`InputCell`/`SelectCell`/`NumberInputCell`).
 
 ## DataGrid (`@moysklad/uikit/data-grid`)
@@ -152,7 +160,7 @@ src/stories/
 
 - `npx tsc --noEmit` — без ошибок.
 - `npm run build-storybook` — успешная сборка (EXIT 0). Предупреждения `"use client"` из framer-motion — безвредны.
-- ✅ **Рантайм-прогон в браузере сделан**: все 68 историй рендерятся без ошибок (проверка через скрытый iframe — класс `sb-show-errordisplay` + слушатели `error`/`unhandledrejection`); открываемые оверлеи (Modal, Sidepage, BottomSheet, Dropdown, Carousel) проверены в открытом состоянии.
+- ✅ **Рантайм-прогон**: на 31.20.0 — `npm run check-stories` (см. «Текущее состояние»). Исторически (28.1.0): все 68 историй рендерятся без ошибок (проверка через скрытый iframe — класс `sb-show-errordisplay` + слушатели `error`/`unhandledrejection`); открываемые оверлеи (Modal, Sidepage, BottomSheet, Dropdown, Carousel) проверены в открытом состоянии.
   - Метод сверки рантайма (быстрый): загрузить dev-сервер, в любой странице создать скрытый `<iframe>` (тот же origin), в цикле менять `src='/iframe.html?id=<id>&viewMode=story'`, после load+~450мс читать `iframe.contentDocument.body.classList.contains('sb-show-errordisplay')` и `#error-message`. Так весь набор проверяется одним JS-вызовом.
   - ⚠️ Урок: `tsc` + `build` НЕ ловят рантайм-падения (неверное значение пропа, отсутствующий провайдер/якорь). Так пропустили баги Datepicker `localeFormat`, AutoComplete `ref`, BottomSheet-провайдер. После добавления интерактивных компонентов — гонять браузерный прогон.
 - `tsconfig.json`: `moduleResolution: bundler`, `jsx: react-jsx`, `strict: true`.
