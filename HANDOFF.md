@@ -41,65 +41,14 @@
   - `npm run build-storybook` — статическая сборка в `storybook-static/`
 - Node 24, npm 11.
 
-## Факты о пакете
+## Знания о пакете — в навыке `moysklad-uikit`
 
-- `@moysklad/uikit` **v31.20.0** (с 2026-10-12; до этого 28.1.0), peer: react 17/18. Установлен react 18.3.1. CHANGELOG в пакете нет — изменения только сравнением `.d.ts`.
-- Токены: `import '@moysklad/uikit/colorVariables.css'` (подключён один раз в `.storybook/preview.ts`).
-  - CSS `@layer lognex` → подслои `basic` (палитра), `ms` (семантика: `--text-*`, `--bgd-*`, `--button-*`, `--border-*`, `--elements-*`, `--badge-*`), `status` (`--status-*`); в 31.x добавлены `gwt-status` (`--gwt-statuses-*`) и `viewers-stack` (`--viewers-stack-*`), удалён `--elements-disabled`.
-- **318 иконок** (в 28.1.0 было 306): `import { Check20Icon } from '@moysklad/uikit/icon'`. Размеры 12/16/20px. Пропы: `{ stroke?, width?, height?, className? }`. Имена вида `Name{12|16|20}Icon`.
-- Типографика: `Text` с `variant` (body, bodyL, bodyStrong, bodyXL, caption, heading1..4) + шорткаты `Text.H1..H4/Body/Caption`. Цвета: `TextColor` (primary, secondary, tertiary, accent, positive, critical, attention, invert).
+API-нюансы компонентов, подпути, провайдеры, токены, иконки, data-grid и каркас приложения живут в навыке `skills/moysklad-uikit/` этого репозитория (подключён в `~/.claude/skills/moysklad-uikit` симлинком). Это единственный источник: новое о пакете, найденное при работе с витриной, записывать туда, а не сюда.
 
-## ⚠️ Гочи (важно!)
-
-### Компоненты НЕ в главном входе — только через подпути
-Реэкспортируются из `@moysklad/uikit/components/<Name>`, а НЕ из `@moysklad/uikit`:
-```tsx
-import { FieldRow } from '@moysklad/uikit/components/FieldRow';
-import { FieldLabel } from '@moysklad/uikit/components/FieldLabel'; // замена Label (@deprecated в 31.x)
-import { Panel } from '@moysklad/uikit/components/Panel';
-import { LabelValue } from '@moysklad/uikit/components/LabelValue';
-import { Info } from '@moysklad/uikit/components/Info';
-import { Indicator } from '@moysklad/uikit/components/Indicator';
-import { ImagePreview } from '@moysklad/uikit/components/ImagePreview';
-import { InputClear } from '@moysklad/uikit/components/InputClear';
-```
-Проверять наличие в главном входе: `node_modules/@moysklad/uikit/dist/index.d.ts`.
-Все подпути есть в `package.json` → `exports`.
-
-### API-нюансы конкретных компонентов
-- **Button**: `variant` (primary/accent/additional/frameless/secondary/filled), `size` (m/l/xl), `isIconButton`, `isLoading`, `stretch`.
-- **Chip**: union из legacy (`isActive`/`onClick`/`children`) и new API. Использовать **new**: `label`, `selected`, `onSelectedChange`, `variant` (regular/warning/critical), `clearable`/`onClear`.
-- **Switch**: `@deprecated` → использовать `SegmentButton`.
-- **Header**: `@deprecated` → использовать `Text`/`Text.H1..`.
-- **Select**: `value?: ISelectOption<T>` (опция целиком, не raw), `onChange(option)`, `options`.
-- **Checkbox/Radiobutton**: `onChange(e)` где `e.target` кастуется к `HTMLInputElement`.
-- **Tabs**: compound `Tabs` + `Tabs.Item` (value/onChange).
-- **SegmentButton**: `SegmentButton.Group` (value/onChange) + `SegmentButton` (value).
-- **Breadcrumbs**: compound `Breadcrumbs` + `Breadcrumbs.Item` (НЕ проп `items`).
-- **Modal**: `isVisible`/`onClose` + `Modal.Header/Body/Footer`.
-- **Sidepage**: `isOpen`/`onClose` + отдельные экспорты `SidepageHeader/Content/Footer`.
-- **Dropdown**: требует `triggerRef: RefObject<HTMLElement>`, `open`, `onClose(reason?)`. `DropdownDivider` отдельно.
-- **Snackbar**: провайдер `<Snackbar>` оборачивает дерево; внутри `useSnackbar().showSnackbar({ message })`.
-- **OverlayActions**: `actions: [{ id, title, icon: ComponentType, onClick }]`, оборачивает children.
-- **Tooltip**: ОБЯЗАТЕЛЬНЫ `placement` и `offset: [number, number]`. `Placement` enum.
-- **Hint**: `variant` (standard/alert), `placement`, `overlay`.
-- **Datepicker**: ОБЯЗАТЕЛЬНЫ `lang` (`ELanguages.RU`), `localeFormat`, `selectedDate`, `onDateChanged(date, options)`.
-  - ⚠️ `localeFormat` — это **локаль для `Intl.DateTimeFormat`** (BCP-47 тег, напр. `'ru-RU'` = `ELanguages.RU`), а НЕ паттерн формата! Тип `TLocaleFormat = string` вводит в заблуждение. Передача `'dd.MM.yyyy'` → рантайм `RangeError: Invalid language tag`. Формат вывода задаётся через `dateTimeFormatOptions: Intl.DateTimeFormatOptions`.
-- **Quantity**: `value: number`, `onChange(e|null, value)`.
-- **InputUnit**: `value: number`, `onChangeValue`, `unitOptions/selectedUnitOption/onUnitChange` (ISelectOption).
-- **Multiselect**: `<Multiselect<T>>` с `items: {value,label}[]`, `values: T[]`, `onChange(values)`, `getOtherText(n)`.
-- **AutoComplete**: `renderInput` ОБЯЗАТЕЛЕН; его `onChange` вызывается **без аргументов** (`onChange?.()`). `options` = массив или `null`. ⚠️ `ref` из `renderInput` ОБЯЗАТЕЛЬНО привязать к input — это якорь дропдауна (floating-ui `autoUpdate`). Без него рантайм-краш `Cannot read properties of null (reading 'getBoundingClientRect')`. Дженерик `R` не выводится → привести `ref as Ref<HTMLInputElement>`.
-- **BottomSheet**: ⚠️ ТРЕБУЕТ обёртку `<BottomSheetContextProvider>` — порталится в `root` из контекста; без провайдера `root === null` и шторка **молча не открывается** (без ошибки). Провайдер есть в главном входе.
-- **MentionsTextfield**: `value: TMentionValue` (`{raw, backend, mentionsMap}`), `items`, `trigger="@"`, `onChange(value)`.
-- **FileUploader**: хук `useFileUploader()` → `{ files, invalidFiles, loadingFiles, removeFile, ... }`. Компоненты `FileUploader.Trigger {...uploader}` (dropzone) и `FileUploader` (`files`, `onDeleteFile`).
-- **EmptyState**: `imageSlot` (`EmptyState.Image source/alt`), `actionsSlot` (`EmptyState.Actions` + `EmptyState.Button` = UIKit Button).
-- **EmptyStateLarge**: своя `EmptyStateLarge.Button` с `variant` `'blue'|'green'` (НЕ UIKit Button!), `.Actions` (left/rightButtonSlot), `.Links`/`.Link`, `.Image`.
-- **Indicator**: `indicator: { mode: 'count'|'countDot'|'noveltyDot'|'noveltyNumber', count? }`.
-- **VerticalTab**: `VerticalTabGroup` (value/onChange) + `VerticalTab` (title/value/icon/counter/titleDot/isDisabled).
-- **SideMenu**: `items: {id,label}[]`, `selectedId`, `onSelect`.
-- **HStack/VStack**: `size` = `s0..s40` (шаг 4px × коэффициент), полиморфные (`as`).
-- **Listing**: `current/total/onPrev/onNext`, `isPrevDisabled/isNextDisabled`.
-- **Carousel**: `sources: string[]`, `isVisible`, `onClose` (полноэкранный вьюер).
+- `SKILL.md` — порядок работы и самые частые ловушки;
+- `references/components.md` — нюансы API по каждому компоненту;
+- `references/data-grid.md` — таблицы;
+- `references/setup.md` — стек и каркас нового приложения (бывший `stack.md`).
 
 ## Структура витрины
 
@@ -127,16 +76,8 @@ src/stories/
 
 ## DataGrid (`@moysklad/uikit/data-grid`)
 
-Построен на **@tanstack/react-table 8.21.3** (зафиксирован в `dependencies` точной версией — нужен ЕДИНЫЙ инстанс с uikit, иначе React-контекст таблицы не совпадёт).
-
-- Демо: `src/stories/demos/DataGridTable.stories.tsx` («Демо-сборки/DataGrid»).
-- Паттерн: `useReactTable({...})` → `<Table table={...} isLoading pagination={...} />`.
-- Готовые ячейки: `NameCell`, `TextCell` (требует `isArchived`/`isDisabled`), `CheckboxCell` (`{row, table}`), `LinkCell`, `DateCell`, `BooleanCell`, `InputCell`, `SelectCell`, `ImageCell` и др. (`data-grid/cells`).
-- Готовые заголовки: `CheckboxHeader` (`{table, column}`), `TextHeader`, `NumberHeader`, `DateHeader`, `LinkHeader`, `HeaderBuilder` + фильтр-компоненты (`data-grid/headers`).
-- `Pagination` из data-grid: `{ total, pageSize, startItemIndex, isDisabled, onPaginationChange(start, perPage) }`.
-- Обернуть в `LocaleContextProvider lang/locale={ELanguages.RU}` (локаль для ячеек/пагинации).
-- ⚠️ Гочи TS: `Table` дженерик `<T extends WithRowClickLink>` инвариантен в TSX → вывод падает в ограничение. Фикс: (1) тип строки ДОЛЖЕН иметь общее свойство с `WithRowClickLink` — добавить `onRowClick?: () => void` (иначе weak-type TS2559); (2) фиксировать дженерик instantiation-выражением: `const ProductTable = Table<Product>;` и рендерить `<ProductTable .../>`.
-- ⚠️ Контейнер таблицы: задавать высоту обёртке (демо — `height: 420`); Table сам считает высоту (ResizeObserver). Это самый runtime-чувствительный компонент — стоит открыть в браузере и проверить визуально.
+- Демо: `src/stories/demos/DataGridTable.stories.tsx` («Демо-сборки/DataGrid»), базовый сценарий: выбор строк, ячейки, пагинация. API и ловушки — `skills/moysklad-uikit/references/data-grid.md`.
+- `@tanstack/react-table` зафиксирован в `dependencies` точной версией `8.21.3`.
 
 ## Верификация
 

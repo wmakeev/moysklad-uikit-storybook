@@ -30,5 +30,5 @@ npm run build-storybook  # статическая сборка в storybook-stat
 ## Документация
 
 - [`CLAUDE.md`](CLAUDE.md) — навигация по репозиторию для агента.
-- [`HANDOFF.md`](HANDOFF.md) — контекст, API-нюансы компонентов, методология.
-- [`stack.md`](stack.md) — как поднять продакшн-приложение на `@moysklad/uikit`.
+- [`HANDOFF.md`](HANDOFF.md) — контекст витрины, методология, ловушки окружения.
+- [`skills/moysklad-uikit/`](skills/moysklad-uikit/SKILL.md) — навык для агента: как строить приложение на `@moysklad/uikit` (каркас, API-нюансы компонентов, data-grid).
