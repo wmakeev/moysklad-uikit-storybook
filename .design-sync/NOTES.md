@@ -29,8 +29,8 @@ node .ds-sync/resync.mjs --config .design-sync/config.json --node-modules ./node
   `title: 'Компоненты/<Group>/<Name>'`). Конвертер мапит ПОСЛЕДНИЙ сегмент title на имя экспорта;
   группа берётся из сегмента ПЕРЕД именем и ДОЛЖНА быть латиницей (кириллица → слаг пустой → `misc`).
   Старые тематические истории (`src/stories/components/*`) удалены. Оставлены: tokens/*, Introduction.mdx, demos/*.
-- **extraEntries: `../../../.design-sync/extra-exports.ts`** — path-form шим, реэкспортит 6 subpath-only
-  компонентов (FieldRow, ImagePreview, Indicator, Info, Label, LabelValue), которых нет в главном входе
+- **extraEntries: `../../../.design-sync/extra-exports.ts`** — path-form шим, реэкспортит 7 subpath-only
+  компонентов (FieldLabel, FieldRow, ImagePreview, Indicator, Info, LabelValue, Panel), которых нет в главном входе
   `dist/index.js`. Без него они (а) не на `window.MoyskladUikit` для рендера и (б) не распознаются как
   компоненты (гейт экспортов сканит `export { X } from` в path-form, а bare-спецификатор
   `@moysklad/uikit/components/X` он не резолвит — там нет директории `node_modules/.../components/X`).
@@ -41,6 +41,8 @@ node .ds-sync/resync.mjs --config .design-sync/config.json --node-modules ./node
 - **titleMap (null)** — гасит [TITLE_UNMAPPED] для не-компонентных страниц: Цвета, Типографика, Иконки,
   DataGrid(таблица), Карточкатовара, Списоктоваров (ключи — с убранными пробелами).
 - **overrides.EmptyStateLarge.cardMode: "column"** — история шире ячейки сетки ([GRID_OVERFLOW]).
+- **overrides.Layout.cardMode: "column"** (31.20.0) — все истории Layout — макеты страницы шире ячейки сетки ([GRID_OVERFLOW] wide). Presentation-only, оценки не сбрасывает.
+- **Ключ `previousProjectId` из config.json убран** (31.20.0): конвертер падает на неизвестных ключах (`[CONFIG] unknown key`). Id старого проекта — ниже, в «Состояние выгрузки».
 - **readmeHeader: .design-sync/conventions.md** — conventions-заголовок (идиома токенов, провайдеры, шрифт).
 
 ## Re-sync risks / на что смотреть
@@ -60,33 +62,35 @@ node .ds-sync/resync.mjs --config .design-sync/config.json --node-modules ./node
   требует @tanstack/react-table + LocaleContextProvider. Демо осталось как локальная история (titleMap null).
 - **306 иконок** и токен-страницы (Цвета/Иконки) не имеют карточек (нет экспорта-компонента на каждую).
   Иконки доступны как `@moysklad/uikit/icon`; в бандл главного глобала не входят.
-- **Не git-репозиторий** → коммитов нет. Durable-состояние живёт в `.design-sync/` (config.json, NOTES.md,
-  conventions.md, extra-exports.ts, .cache/compare/*.grade.json на этой же машине).
+- **Textfield 31.20.0 без `value` рисует строку «undefined»** [GENERAL для историй]: неуправляемый Textfield
+  показывает литерал. Ошибки консоли нет, `check-stories` и tsc молчат — поймала только сверка снимков.
+  В историях Textfield всегда `value` + `onChange`; правило записано и в conventions.md для дизайн-агента.
+- **Версия браузера Playwright** [GENERAL]: `.ds-sync` ставит свой `playwright` (1.61 → chromium-headless-shell
+  сборки 1228), проект — более новый `playwright-core`. Установка новой сборки может убрать старую из
+  `~/.cache/ms-playwright`; тогда валидатор пишет `[RENDER_SKIPPED] Executable doesn't exist`. Лечение:
+  `cd .ds-sync && npx playwright install chromium-headless-shell`. Не запускать с `--no-render-check`.
+- **Снимки превью в сверке — окно 900x700**: у длинных историй нижние секции превью за кадром, оценка по
+  видимой части (код у секций общий). Заголовки секций Showcase в превью идут шрифтом с засечками — у превью
+  нет body-шрифта из `.storybook/preview.css`; это обвязка витрины, не компонент, было так и на 28.x.
+- **Проверка в браузере под учёткой**: браузер агента (`agent-browser`) не залогинен в claude.ai, вход упирается
+  в Cloudflare и логин — визуальную проверку галереи делает владелец или вход в профиль `uikit` руками.
+- Репозиторий — git (ветка `main`, push = деплой витрины). Durable-состояние design-sync — `.design-sync/`
+  (config.json, NOTES.md, conventions.md, extra-exports.ts); оценки `.cache/compare/*.grade.json` — только на этой машине.
 
-## Состояние грейдинга
-- **ВСЕ 57 компонентов оценены `match`** (2026-06-24). Вердикты в `.design-sync/.cache/compare/<Name>.grade.json`.
-  Ни одного mismatch/close/blocked; ни одного owned-превью не понадобилось; ни одной новой config-правки.
-  Глобальных проблем рендера нет (токены применяются, цвета и шкала верны, шрифт — принятый фолбэк).
-- Каждый компонент — одна история «Обзор», module-mode generated preview. Грейд сделан §4c fan-out
-  (2 волны: B1–B4 = 31 комп., B5–B7 = 22 комп.) поверх solo-фазы (Button/Badge/Text/Modal).
+## Состояние грейдинга (2026-10-12, 31.20.0)
+- **68/68 компонентов `match`.** Вердикты в `.design-sync/.cache/compare/<Name>.grade.json`.
+- 30 компонентов (18 с изменёнными историями + 12 новых) сняты заново и оценены по снимкам (все истории на листах просмотрены); у Textfield после первого прогона найдена «undefined», история исправлена и переснята.
+- 38 компонентов перенесены с оценкой 28.x (истории не менялись). После мажорного апдейта выборочно перепроверены глазами: Badge, Modal, Tabs, Checkbox, Text, EmptyStateLarge, Banner, LabelValueDate, LabelValueTextfield — совпадают.
+- Validate: render check 68/68, bad/thin 0; единственное предупреждение — принятый `[FONT_MISSING]`.
 
-## Состояние выгрузки
-- **АКТИВНЫЙ проект Claude Design: `60c8aa90-acf4-42c8-a017-03288eda7056` («moysklad uikit»)** — запинен в config.json.
-  URL: https://claude.ai/design/p/60c8aa90-acf4-42c8-a017-03288eda7056
-- **ВЫГРУЖЕНО ПОЛНОСТЬЮ (2026-06-25)**: все 57 компонентов (× .d.ts/.html/.jsx/.prompt.md) + 57 `_preview/*.js`
-  + бандл + styles.css + tokens/ + _vendor/ + README. `_ds_sync.json` ЗАЛИТ последним → ANCHORED.
-  **Подтверждено визуально в браузере**: галерея компонентов и README рендерятся, app показал «Compiling your
-  design system…» и построил `_ds_manifest.json`. Удалений не было (проект создавался пустым).
-- App-генерируемые `_adherence.oxlintrc.json` и `_ds_manifest.json` — НЕ наши, не трогаем.
+## Состояние выгрузки (2026-10-12, 31.20.0)
+- **АКТИВНЫЙ проект: `60c8aa90-acf4-42c8-a017-03288eda7056`** (в интерфейсе — «MoySklad UI Kit»), запинен в config.json. URL: https://claude.ai/design/p/60c8aa90-acf4-42c8-a017-03288eda7056
+- Atomic re-sync по якорю: залиты все файлы бандла (68 × .d.ts/.html/.jsx/.prompt.md, 68 `_preview/*.js`, бандл, стили, токены, `_vendor/`, README), удалён `Label` (5 файлов), sentinel перевзведён, `_ds_sync.json` — последним. `list_files` подтвердил 68 папок компонентов, `Label` нет.
+- App-генерируемые `_adherence.oxlintrc.json` и `_ds_manifest.json` — не наши, не трогаем.
+- Published (чекбокс) не трогали — снят.
+- Старый проект `b8937eea-acb1-4ab3-aa64-9e7e589c2d9d` («Design System», застрял в онбординг-мастере) удаляется только в интерфейсе; удалён ли — неизвестно.
 
-### ⚠️ КРИТИЧНО: режим проекта (почему сменили проект)
-- Первый проект **b8937eea-acb1-4ab3-aa64-9e7e589c2d9d** («Design System») был **переиспользован/начат в UI** и
-  застрял в режиме **«generate a design system»** (онбординг-мастер «Set up your design system» с шагом Generate).
-  Загрузка файлов через API его НЕ переключает в режим галереи: файлы и манифест корректны, но UI всё равно
-  показывал мастер настройки. Переключателя режима в API НЕТ.
-- **Лечится только свежим `DesignSync(create_project)`** — API-созданный проект сразу открывается в режиме
-  «Design system» (плашка Publish + «No cards yet — add @dsCard…») и наполняется карточками после выгрузки.
-- **ПРАВИЛО на будущее: целевой проект всегда создавать через `create_project`, НЕ переиспользовать
-  существующий/созданный-в-UI** (это прямо требование базового скилла §1). Старый b8937eea на 2026-06-25 ещё
-  существует, помечен на удаление (в API метода delete_project нет → удалять в UI). `previousProjectId` в config.json.
-- Чекбокс **Published** в проекте (снят) — публикует ДС для новых проектов команды; включать по решению пользователя.
+### История: почему проект 60c8aa90, а не b8937eea (2026-06-25)
+- Первый проект b8937eea был начат в интерфейсе и застрял в режиме «generate a design system» (онбординг-мастер). Загрузка через API режим не переключает, переключателя в API нет.
+- Лечится только свежим `DesignSync(create_project)` — API-созданный проект сразу открывается в режиме галереи.
+- **Правило: целевой проект всегда создавать через `create_project`**, не переиспользовать созданный в интерфейсе.
