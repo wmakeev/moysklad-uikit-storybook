@@ -17,6 +17,11 @@ export const Overview: Story = {
   render: () => {
     const uploader = useFileUploader();
     const [text, setText] = useState('');
+    // Без value неуправляемый Textfield 31.20.0 показывает строку «undefined»
+    const [comment, setComment] = useState('');
+    const [sizeM, setSizeM] = useState('');
+    const [sizeL, setSizeL] = useState('');
+    const [resized, setResized] = useState('');
     return (
       <Col gap={28} style={box}>
         <Section title="Базовое поле с лимитом и подсказкой">
@@ -24,6 +29,8 @@ export const Overview: Story = {
             name="comment"
             label="Комментарий"
             placeholder="Введите текст…"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
             limit={200}
             showCounterLimit={200}
             autoVerticalResize
@@ -32,8 +39,22 @@ export const Overview: Story = {
         </Section>
         <Section title="Размеры: m и l">
           <Col gap={16}>
-            <Textfield name="size-m" label="size m" size="m" placeholder="Размер M" />
-            <Textfield name="size-l" label="size l" size="l" placeholder="Размер L" />
+            <Textfield
+              name="size-m"
+              label="size m"
+              size="m"
+              placeholder="Размер M"
+              value={sizeM}
+              onChange={(e) => setSizeM(e.target.value)}
+            />
+            <Textfield
+              name="size-l"
+              label="size l"
+              size="l"
+              placeholder="Размер L"
+              value={sizeL}
+              onChange={(e) => setSizeL(e.target.value)}
+            />
           </Col>
         </Section>
         <Section title="Кнопки действий: отправить, эмодзи, файл">
@@ -61,6 +82,8 @@ export const Overview: Story = {
             name="resize"
             label="Потяните за верхнюю или нижнюю кромку"
             placeholder="Текст…"
+            value={resized}
+            onChange={(e) => setResized(e.target.value)}
             resizeTop
             resizeBottom
           />

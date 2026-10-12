@@ -14,6 +14,9 @@
   "overrides": {
     "EmptyStateLarge": {
       "cardMode": "column"
+    },
+    "Layout": {
+      "cardMode": "column"
     }
   },
   "titleMap": {
@@ -23,6 +26,5 @@
     "DataGrid(таблица)": null,
     "Карточкатовара": null,
     "Списоктоваров": null
-  },
-  "previousProjectId": "b8937eea-acb1-4ab3-aa64-9e7e589c2d9d"
+  }
 }

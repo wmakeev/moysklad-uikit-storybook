@@ -1,6 +1,6 @@
 ## Building with @moysklad/uikit
 
-All 57 components are the real published library at `window.MoyskladUikit.*`. Render into a dedicated child node, never the host React root.
+All 68 components are the real published library at `window.MoyskladUikit.*`. Render into a dedicated child node, never the host React root.
 
 ### Styling idiom — CSS custom properties (NOT utility classes)
 
@@ -27,7 +27,7 @@ Most components render standalone. Three need a wrapper to work — without it t
 
 ### Where the truth lives
 
-Per component, read `components/<group>/<Name>/<Name>.prompt.md` (usage + variants) and `<Name>.d.ts` (exact prop types) before composing. Several components are controlled-only and expect `value`/`onChange`; a few have non-obvious contracts (Datepicker `localeFormat` is a BCP-47 locale, not a format pattern; AutoComplete's `renderInput` ref must bind to the input). The `.d.ts`/`.prompt.md` files are authoritative.
+Per component, read `components/<group>/<Name>/<Name>.prompt.md` (usage + variants) and `<Name>.d.ts` (exact prop types) before composing. Several components are controlled-only and expect `value`/`onChange`; a few have non-obvious contracts (Datepicker `localeFormat` is a BCP-47 locale, not a format pattern; AutoComplete's `renderInput` ref must bind to the input; `Textfield` without `value` renders the literal text "undefined" — always pass `value` + `onChange`). The `.d.ts`/`.prompt.md` files are authoritative.
 
 ### Minimal example
 

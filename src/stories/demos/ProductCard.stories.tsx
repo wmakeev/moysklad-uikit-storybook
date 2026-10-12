@@ -40,6 +40,7 @@ const Card = () => {
   const [name, setName] = useState('Наушники Aero Pro');
   const [group, setGroup] = useState<ISelectOption<string> | null>(GROUPS[0]);
   const [weighable, setWeighable] = useState(false);
+  const [desc, setDesc] = useState('');
 
   return (
     <div style={{ maxWidth: 720, margin: '0 auto', padding: 24 }}>
@@ -95,7 +96,7 @@ const Card = () => {
               placeholder="Выберите группу"
             />
           </div>
-          <Textfield name="desc" label="Описание" placeholder="Краткое описание товара…" autoVerticalResize limit={300} showCounterLimit={300} />
+          <Textfield name="desc" label="Описание" placeholder="Краткое описание товара…" value={desc} onChange={(e) => setDesc(e.target.value)} autoVerticalResize limit={300} showCounterLimit={300} />
           <Checkbox name="weighable" label="Весовой товар" checked={weighable} onChange={(e) => setWeighable((e.target as HTMLInputElement).checked)} />
         </VStack>
       )}
